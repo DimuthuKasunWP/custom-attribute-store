@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1622537980817
+Build-Jdk: 1.8.0_292
+Built-By: dimuth
+Bundle-Description: carbon-parent
+Bundle-DocURL: http://wso2.com
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
+Bundle-ManifestVersion: 2
+Bundle-Name: com.wso2.carbon.custom.attribute.store
+Bundle-SymbolicName: com.wso2.carbon.custom.attribute.store
+Bundle-Vendor: WSO2 Inc
+Bundle-Version: 1.0.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+DynamicImport-Package: *
+Export-Package: com.wso2.carbon.custom.attribute.store;version="1.0.0"
+Import-Package: org.osgi.framework;version="[1.9,2)"
+Require-Capability: osgi.service;filter:="(objectClass=org.wso2.carbon.u
+ ser.core.service.RealmService)";effective:=active,osgi.ee;filter:="(&(o
+ sgi.ee=JavaSE)(version=1.8))"
+Service-Component: OSGI-INF/com.wso2.carbon.custom.attribute.store.compo
+ nent.xml
+Tool: Bnd-3.2.0.201605172007
