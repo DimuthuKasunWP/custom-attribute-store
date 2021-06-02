@@ -6,7 +6,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.AbstractIdentityUserOperationEventListener;
-import org.wso2.carbon.user.api.RealmConfiguration;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
@@ -165,57 +164,10 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
         return true;
     }
 
-//    @Override
-//    public boolean doPostAddUser(String userName, Object credential, String[] roleList, Map<String, String> claims, String profile, UserStoreManager userStoreManager) throws UserStoreException {
-//
-//        log.info("Custom Attribute Store , doPreAddUser method");
-//        String domainName = UserCoreUtil.getDomainName(userStoreManager.getRealmConfiguration());
-//        if (!domainName.endsWith(ATTRIBUTE_STORE_SUFFIX)) {
-//            String attributeStoreDomain = domainName + ATTRIBUTE_STORE_SUFFIX;
-//            RealmService realmService = CustomAttributeStoreComponent.getRealmService();
-//            if (realmService != null) {
-//                UserRealm userRealm = realmService.getUserRealm(userStoreManager.getRealmConfiguration());
-//                UserStoreManager secondaryUserStoreManager = userRealm.getUserStoreManager().
-//                        getSecondaryUserStoreManager(attributeStoreDomain);
-//                if (secondaryUserStoreManager != null) {
-//                    userStoreManager = secondaryUserStoreManager;
-//                    userStoreManager.addUser(userName, credential.toString(), roleList, claims, profile);
-//                    userStoreManager.setUserClaimValues(userName, claims, profile);
-//                } else {
-//                    log.info(" secondary user store manager is null for " + attributeStoreDomain);
-//                }
-//            }
-//        }
-//        return true;
-//    }
-
-//    @Override
-//    public boolean doPreAddUserWithID(String userName, Object credential, String[] roleList, Map<String, String> claims, String profile, UserStoreManager userStoreManager) throws UserStoreException {
-//
-//        log.info("Custom Attribute Store , doPreAddUserWithID method");
-//        String domainName = UserCoreUtil.getDomainName(userStoreManager.getRealmConfiguration());
-//        log.info("domain name" + domainName);
-//        if (!domainName.endsWith(ATTRIBUTE_STORE_SUFFIX)) {
-//            String attributeStoreDomain = domainName + ATTRIBUTE_STORE_SUFFIX;
-//            RealmService realmService = CustomAttributeStoreComponent.getRealmService();
-//            if (realmService != null) {
-//                UserRealm userRealm = realmService.getUserRealm(userStoreManager.getRealmConfiguration());
-//                UserStoreManager secondaryUserStoreManager = userRealm.getUserStoreManager().
-//                        getSecondaryUserStoreManager(attributeStoreDomain);
-//                if (secondaryUserStoreManager != null) {
-//                    userStoreManager = secondaryUserStoreManager;
-//                    userStoreManager.addUser(userName, credential.toString(), roleList, claims, profile);
-//                    userStoreManager.setUserClaimValues(userName, claims, profile);
-//                } else {
-//                    log.info(" secondary user store manager is null for " + attributeStoreDomain);
-//                }
-//            }
-//        }
-//        return true;
-//    }
-
     @Override
-    public boolean doPostAddUserWithID(User user, Object credential, String[] roleList, Map<String, String> claims, String profile, UserStoreManager userStoreManager) throws UserStoreException {
+    public boolean doPostAddUserWithID(User user, Object credential, String[] roleList,
+                                       Map<String, String> claims, String profile, UserStoreManager userStoreManager)
+            throws UserStoreException {
 
         log.info("Custom Attribute Store , doPostAddUserWithID method");
         String domainName = UserCoreUtil.getDomainName(userStoreManager.getRealmConfiguration());
@@ -239,68 +191,101 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
     }
 
     @Override
-    public boolean doPreGetUserListWithID(String claimUri, String claimValue, List<User> returnUsersList, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPreGetUserListWithID(claimUri, claimValue, returnUsersList, userStoreManager);
+    public boolean doPreDeleteUserWithID(String userID, UserStoreManager userStoreManager)
+            throws UserStoreException {
+        log.info("Custom Attribute Store , doPostDeleteUserWithID method");
+        String domainName = UserCoreUtil.getDomainName(userStoreManager.getRealmConfiguration());
+        if (!domainName.endsWith(ATTRIBUTE_STORE_SUFFIX)) {
+            String attributeStoreDomain = domainName + ATTRIBUTE_STORE_SUFFIX;
+            RealmService realmService = CustomAttributeStoreComponent.getRealmService();
+            if (realmService != null) {
+                UserRealm userRealm = realmService.getUserRealm(userStoreManager.getRealmConfiguration());
+                UserStoreManager secondaryUserStoreManager = userRealm.getUserStoreManager().
+                        getSecondaryUserStoreManager(attributeStoreDomain);
+                UserUniqueIDManger uniqueIDManger = new UserUniqueIDManger();
+                User user = uniqueIDManger.getUser(userID, (AbstractUserStoreManager) userStoreManager);
+                if (secondaryUserStoreManager != null) {
+                    userStoreManager = secondaryUserStoreManager;
+                    userStoreManager.deleteUser(user.getUsername());
+                } else {
+                    log.info(" secondary user store manager is null for " + attributeStoreDomain);
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean doPreGetUserListWithID(String claimUri, String claimValue,
+                                          List<User> returnUsersList, UserStoreManager userStoreManager)
+            throws UserStoreException {
+        return true;
     }
 
     @Override
     public boolean doPreGetUserListWithID(Condition condition, String domain, String profileName, int limit, int offset, String sortBy, String sortOrder, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPreGetUserListWithID(condition, domain, profileName, limit, offset, sortBy, sortOrder, userStoreManager);
+        return true;
     }
 
     @Override
     public boolean doPreGetUserListWithID(String claimUri, String claimValue, int limit, int offset, List<User> returnUsersList, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPreGetUserListWithID(claimUri, claimValue, limit, offset, returnUsersList, userStoreManager);
+        return true;
     }
 
     @Override
     public boolean doPreGetUserList(String claimUri, String claimValue, List<String> returnUserNameList, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPreGetUserList(claimUri, claimValue, returnUserNameList, userStoreManager);
+        return true;
     }
 
     @Override
     public boolean doPreGetUserList(Condition condition, String domain, String profileName, int limit, int offset, String sortBy, String sortOrder, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPreGetUserList(condition, domain, profileName, limit, offset, sortBy, sortOrder, userStoreManager);
+        return true;
     }
 
     @Override
     public boolean doPreGetUserList(String claimUri, String claimValue, int limit, int offset, List<String> returnUserNameList, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPreGetUserList(claimUri, claimValue, limit, offset, returnUserNameList, userStoreManager);
+        return true;
     }
 
     @Override
     public boolean doPostGetUserListWithID(String claimUri, String claimValue, List<User> returnValues, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPostGetUserListWithID(claimUri, claimValue, returnValues, userStoreManager);
+        return true;
     }
 
     @Override
     public boolean doPostGetUserListWithID(String claimUri, String claimValue, List<User> returnValues, int limit, int offset, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPostGetUserListWithID(claimUri, claimValue, returnValues, limit, offset, userStoreManager);
+        return true;
     }
 
     @Override
     public boolean doPostGetUserListWithID(Condition condition, String domain, String profileName, int limit, int offset, String sortBy, String sortOrder, List<User> users, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPostGetUserListWithID(condition, domain, profileName, limit, offset, sortBy, sortOrder, users, userStoreManager);
+        return true;
     }
 
     @Override
     public boolean doPostGetUserList(String claimUri, String claimValue, List<String> returnValues, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPostGetUserList(claimUri, claimValue, returnValues, userStoreManager);
+        return true;
     }
 
     @Override
     public boolean doPostGetUserList(String claimUri, String claimValue, List<String> returnValues, int limit, int offset, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPostGetUserList(claimUri, claimValue, returnValues, limit, offset, userStoreManager);
+        return true;
     }
 
     @Override
     public boolean doPostGetUserList(Condition condition, String domain, String profileName, int limit, int offset, String sortBy, String sortOrder, String[] users, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPostGetUserList(condition, domain, profileName, limit, offset, sortBy, sortOrder, users, userStoreManager);
+        return true;
     }
 
     @Override
     public boolean doPostListUsers(String filter, int limit, int offset, List<String> returnValues, UserStoreManager userStoreManager) throws UserStoreException {
-        return super.doPostListUsers(filter, limit, offset, returnValues, userStoreManager);
+        return true;
     }
+
+    @Override
+    public boolean doPostListUsersWithID(String filter, int limit, int offset, List<User> returnValues, UserStoreManager userStoreManager) throws UserStoreException {
+        return true;
+    }
+
 
 }
