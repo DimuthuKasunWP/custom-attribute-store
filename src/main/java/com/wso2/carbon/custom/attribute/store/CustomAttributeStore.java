@@ -204,7 +204,7 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
                         getSecondaryUserStoreManager(attributeStoreDomain);
                 UserUniqueIDManger uniqueIDManger = new UserUniqueIDManger();
                 User user = uniqueIDManger.getUser(userID, (AbstractUserStoreManager) userStoreManager);
-                if (secondaryUserStoreManager != null) {
+                if (secondaryUserStoreManager != null && user != null) {
                     userStoreManager = secondaryUserStoreManager;
                     userStoreManager.deleteUser(user.getUsername());
                 } else {
