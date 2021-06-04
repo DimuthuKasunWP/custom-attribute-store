@@ -12,9 +12,11 @@ import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.common.AbstractUserStoreManager;
 import org.wso2.carbon.user.core.common.User;
 import org.wso2.carbon.user.core.common.UserUniqueIDManger;
+import org.wso2.carbon.user.core.model.Condition;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -221,7 +223,7 @@ public class CustomAttributeStoreAuditLogger extends AbstractIdentityUserOperati
     public boolean doPostGetUserListWithID(String claimUri, String claimValue, final List<User> returnValues,
                                            UserStoreManager userStoreManager)
             throws UserStoreException {
-        returnValues.removeIf(user -> user.getUsername().contains(ATTRIBUTE_STORE_SUFFIX));
+        returnValues.removeIf(user -> user.getUserStoreDomain().contains(ATTRIBUTE_STORE_SUFFIX));
         return true;
     }
 
@@ -230,6 +232,58 @@ public class CustomAttributeStoreAuditLogger extends AbstractIdentityUserOperati
                                      UserStoreManager userStoreManager)
             throws UserStoreException {
         returnValues.removeIf(user -> user.contains(ATTRIBUTE_STORE_SUFFIX));
+        return true;
+    }
+
+    @Override
+    public boolean doPostListUsers(String filter, int limit, int offset, List<String> returnValues,
+                                   UserStoreManager userStoreManager) throws UserStoreException {
+
+        returnValues.removeIf(user -> user.contains(ATTRIBUTE_STORE_SUFFIX));
+        return true;
+    }
+
+    @Override
+    public boolean doPostGetUserListWithID(String claimUri, String claimValue, List<User> returnValues,
+                                           int limit, int offset, UserStoreManager userStoreManager)
+            throws UserStoreException {
+
+        returnValues.removeIf(user -> user.getUserStoreDomain().contains(ATTRIBUTE_STORE_SUFFIX));
+        return true;
+    }
+
+    @Override
+    public boolean doPostGetUserListWithID(Condition condition, String domain, String profileName,
+                                           int limit, int offset, String sortBy, String sortOrder, List<User> users,
+                                           UserStoreManager userStoreManager) throws UserStoreException {
+
+        users.removeIf(user -> user.getUserStoreDomain().contains(ATTRIBUTE_STORE_SUFFIX));
+        return true;
+    }
+
+    @Override
+    public boolean doPostListUsersWithID(String filter, int limit, int offset, List<User> returnValues,
+                                         UserStoreManager userStoreManager) throws UserStoreException {
+
+        returnValues.removeIf(user -> user.getUserStoreDomain().contains(ATTRIBUTE_STORE_SUFFIX));
+        return true;
+    }
+
+    @Override
+    public boolean doPostGetUserList(String claimUri, String claimValue, List<String> returnValues,
+                                     int limit, int offset, UserStoreManager userStoreManager)
+            throws UserStoreException {
+
+        returnValues.removeIf(user -> user.contains(ATTRIBUTE_STORE_SUFFIX));
+        return true;
+    }
+
+    @Override
+    public boolean doPostGetUserList(Condition condition, String domain,
+                                     String profileName, int limit, int offset, String sortBy, String sortOrder,
+                                     String[] users, UserStoreManager userStoreManager) throws UserStoreException {
+
+        Arrays.asList(users).removeIf(user -> user.contains(ATTRIBUTE_STORE_SUFFIX));
         return true;
     }
 }
