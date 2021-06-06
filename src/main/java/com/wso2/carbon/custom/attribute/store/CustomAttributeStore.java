@@ -23,10 +23,10 @@ import java.util.Map;
 /**
  *
  */
-public class CustomAttributeStoreAuditLogger extends AbstractIdentityUserOperationEventListener {
+public class CustomAttributeStore extends AbstractIdentityUserOperationEventListener {
 
     private static final String ATTRIBUTE_STORE_SUFFIX = "-ATTRIBUTE-STORE";
-    private static Log log = LogFactory.getLog(CustomAttributeStoreAuditLogger.class);
+    private static Log log = LogFactory.getLog(CustomAttributeStore.class);
 
     @Override
     public int getExecutionOrderId() {

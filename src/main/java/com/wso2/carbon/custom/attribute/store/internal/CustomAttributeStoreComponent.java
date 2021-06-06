@@ -1,7 +1,7 @@
 package com.wso2.carbon.custom.attribute.store.internal;
 
 
-import com.wso2.carbon.custom.attribute.store.CustomAttributeStoreAuditLogger;
+import com.wso2.carbon.custom.attribute.store.CustomAttributeStore;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
@@ -22,7 +22,7 @@ public class CustomAttributeStoreComponent {
     @Activate
     protected void activate(ComponentContext context) {
 
-        context.getBundleContext().registerService(UserOperationEventListener.class.getName(), new CustomAttributeStoreAuditLogger(), null);
+        context.getBundleContext().registerService(UserOperationEventListener.class.getName(), new CustomAttributeStore(), null);
         log.info("CustomAttributeStore bundle activated successfully..");
     }
 
