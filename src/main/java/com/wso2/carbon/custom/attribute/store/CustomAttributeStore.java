@@ -37,7 +37,6 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
     public boolean doPreAuthenticate(String userName, Object credential, UserStoreManager userStoreManager)
             throws UserStoreException {
 
-        log.info("Custom Attribute Store , doPreAuthenticate method");
         if (UserCoreUtil.getDomainName(userStoreManager.getRealmConfiguration()).endsWith(ATTRIBUTE_STORE_SUFFIX)) {
             throw new UserStoreException("This is an attribute store", "Can't authenticate ");
         }
@@ -48,7 +47,6 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
     public boolean doPreAuthenticateWithID(String userID, Object credential, UserStoreManager userStoreManager)
             throws UserStoreException {
 
-        log.info("Custom Attribute Store , doPreAuthenticateWithID method");
         if (UserCoreUtil.getDomainName(userStoreManager.getRealmConfiguration()).endsWith(ATTRIBUTE_STORE_SUFFIX)) {
             throw new UserStoreException("This is an attribute store", "Can't authenticate ");
         }
@@ -60,9 +58,7 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
             (String userID, Map<String, String> claims, String profileName, UserStoreManager userStoreManager)
             throws UserStoreException {
 
-        log.info("Custom Attribute Store , doPreSetUserClaimValuesWithID method");
         String domainName = UserCoreUtil.getDomainName(userStoreManager.getRealmConfiguration());
-        log.info("domain name" + domainName);
         if (!domainName.endsWith(ATTRIBUTE_STORE_SUFFIX)) {
             String attributeStoreDomain = domainName + ATTRIBUTE_STORE_SUFFIX;
             RealmService realmService = CustomAttributeStoreComponent.getRealmService();
@@ -88,9 +84,7 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
             (String userName, Map<String, String> claims, String profileName, UserStoreManager userStoreManager)
             throws UserStoreException {
 
-        log.info("Custom Attribute Store , doPreSetUserClaimValues method");
         String domainName = UserCoreUtil.getDomainName(userStoreManager.getRealmConfiguration());
-        log.info("domain name" + domainName);
         if (!domainName.endsWith(ATTRIBUTE_STORE_SUFFIX)) {
             String attributeStoreDomain = domainName + ATTRIBUTE_STORE_SUFFIX;
             RealmService realmService = CustomAttributeStoreComponent.getRealmService();
@@ -114,7 +108,6 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
                                             Map<String, String> claimMap, UserStoreManager storeManager)
             throws UserStoreException {
 
-        log.info("Custom Attribute Store , doPostGetUserClaimValues method");
         String userDomainName = UserCoreUtil.getDomainName(storeManager.getRealmConfiguration());
         String attributeStoreDomain;
         if (!StringUtils.containsIgnoreCase(userDomainName, ATTRIBUTE_STORE_SUFFIX)) {
@@ -141,7 +134,6 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
                                                   Map<String, String> claimMap, UserStoreManager userStoreManager)
             throws UserStoreException {
 
-        log.info("Custom Attribute Store , doPostGetUserClaimValuesWithID method");
         String userDomainName = UserCoreUtil.getDomainName(userStoreManager.getRealmConfiguration());
         String attributeStoreDomain;
         if (!StringUtils.containsIgnoreCase(userDomainName, ATTRIBUTE_STORE_SUFFIX)) {
@@ -171,7 +163,6 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
     public boolean doPostAddUserWithID(User user, Object credential, String[] roleList,
                                        Map<String, String> claims, String profile, UserStoreManager userStoreManager)
             throws UserStoreException {
-        log.info("Custom Attribute Store , doPostAddUserWithID method");
         String domainName = UserCoreUtil.getDomainName(userStoreManager.getRealmConfiguration());
         if (!domainName.endsWith(ATTRIBUTE_STORE_SUFFIX)) {
             String attributeStoreDomain = domainName + ATTRIBUTE_STORE_SUFFIX;
@@ -195,7 +186,6 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
     @Override
     public boolean doPreDeleteUserWithID(String userID, UserStoreManager userStoreManager)
             throws UserStoreException {
-        log.info("Custom Attribute Store , doPostDeleteUserWithID method");
         String domainName = UserCoreUtil.getDomainName(userStoreManager.getRealmConfiguration());
         if (!domainName.endsWith(ATTRIBUTE_STORE_SUFFIX)) {
             String attributeStoreDomain = domainName + ATTRIBUTE_STORE_SUFFIX;
