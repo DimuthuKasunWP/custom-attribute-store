@@ -26,6 +26,8 @@ import java.util.Map;
 public class CustomAttributeStore extends AbstractIdentityUserOperationEventListener {
 
     private static final String ATTRIBUTE_STORE_SUFFIX = "-ATTRIBUTE-STORE";
+    private static final String IDENTITY_CLAIM_IDENTIFIER = "identity/";
+    private static final boolean REMOVE_NON_IDENTITY_CLAIMS = true;
     private static Log log = LogFactory.getLog(CustomAttributeStore.class);
 
     @Override
@@ -71,6 +73,8 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
                     User user = uniqueIDManger.getUser(userID, (AbstractUserStoreManager) secondaryUserStoreManager);
                     userStoreManager = secondaryUserStoreManager;
                     userStoreManager.setUserClaimValues(user.getUsername(), claims, profileName);
+                    if (REMOVE_NON_IDENTITY_CLAIMS)
+                        claims.entrySet().removeIf(e -> !e.getKey().contains(IDENTITY_CLAIM_IDENTIFIER));
                 } else {
                     log.info(" secondary user store manager is null for " + attributeStoreDomain);
                 }
@@ -95,6 +99,8 @@ public class CustomAttributeStore extends AbstractIdentityUserOperationEventList
                 if (secondaryUserStoreManager != null) {
                     userStoreManager = secondaryUserStoreManager;
                     userStoreManager.setUserClaimValues(userName, claims, profileName);
+                    if (REMOVE_NON_IDENTITY_CLAIMS)
+                        claims.entrySet().removeIf(e -> !e.getKey().contains(IDENTITY_CLAIM_IDENTIFIER));
                 } else {
                     log.info(" secondary user store manager is null for " + attributeStoreDomain);
                 }
